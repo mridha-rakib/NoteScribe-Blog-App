@@ -7,7 +7,6 @@ import generateToken from "../utils/generateToken.js";
 // @access public
 const authUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
-  console.log(req.body);
 
   const user = await User.findOne({ email });
 

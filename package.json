@@ -7,7 +7,7 @@
   "scripts": {
     "start": "nodemon api/server.js",
     "server": "nodemon api/server.js",
-    "client": "npm start --prefix client",
+    "client": "npm run dev --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run client\""
   },
   "repository": {

@@ -4,7 +4,7 @@ dotenv.config();
 import cookieParser from "cookie-parser";
 import connectDB from "./config/db.js";
 connectDB();
-
+import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
 import authRoutes from "./routes/auth.route.js";
 
 const app = express();
@@ -23,6 +23,9 @@ app.get("/", (req, res) => {
 
 //
 app.use("/api/auth", authRoutes);
+
+app.use(notFound);
+app.use(errorHandler);
 
 app.listen(port, () => {
   console.log(`Server is running on ${port}`);
