@@ -1,16 +1,35 @@
-import { Button, Label, TextInput } from "flowbite-react";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { Button, Label, TextInput } from "flowbite-react";
+import { useRegisterMutation } from "../slices/userApiSlice";
+
+import { toast } from "react-toastify";
 
 const RegisterScreen = () => {
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState({
+    username: "",
+    email: "",
+    password: "",
+  });
+
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.id]: e.target.value });
+    const { id, value } = e.target;
+    setFormData((prevData) => ({ ...prevData, [id]: value }));
   };
+
+  const [register, { isLoading }] = useRegisterMutation();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    try {
+      const res = await register({ ...formData }).unwrap();
+      toast(res);
+      navigate("/");
+    } catch (err) {
+      toast.error(err?.data?.message || err.error);
+    }
   };
 
   return (
@@ -39,6 +58,7 @@ const RegisterScreen = () => {
                 type="text"
                 placeholder="Username"
                 id="username"
+                value={formData.username}
                 onChange={handleChange}
               />
             </div>
@@ -48,6 +68,7 @@ const RegisterScreen = () => {
                 type="email"
                 id="email"
                 placeholder="Email"
+                value={formData.email}
                 onChange={handleChange}
               />
             </div>
@@ -57,11 +78,16 @@ const RegisterScreen = () => {
                 type="password"
                 id="password"
                 placeholder="Password"
+                value={formData.password}
                 onChange={handleChange}
               />
             </div>
 
-            <Button gradientDuoTone="purpleToPink" type="submit">
+            <Button
+              gradientDuoTone="purpleToPink"
+              type="submit"
+              isLoading={isLoading}
+            >
               Sign Up
             </Button>
           </form>

@@ -44,10 +44,20 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new Error("All fields are required");
   }
 
-  const user = await User.create({ username, email, password });
+  const user = await new User({ username, email, password });
 
-  if (user) {
-    res.json("Signup successful");
+  try {
+    await user.save();
+    res.status(201).json({ message: "User registered successfully" });
+  } catch (error) {
+    if (error.code === 11000) {
+      // Duplicate key error
+      const field = Object.keys(error.keyPattern)[0];
+      return res
+        .status(400)
+        .send({ message: `Duplicate key error: ${field} already exists.` });
+    }
+    throw error;
   }
 });
 
