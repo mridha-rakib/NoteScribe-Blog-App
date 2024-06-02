@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Button, Label, TextInput } from "flowbite-react";
+import { Button, Label, Spinner, TextInput } from "flowbite-react";
 import { useRegisterMutation } from "../slices/userApiSlice";
 
 import { toast } from "react-toastify";
@@ -25,8 +25,8 @@ const RegisterScreen = () => {
     e.preventDefault();
     try {
       const res = await register({ ...formData }).unwrap();
-      toast(res);
-      navigate("/");
+      toast(res.message);
+      navigate("/sing-in");
     } catch (err) {
       toast.error(err?.data?.message || err.error);
     }
@@ -86,9 +86,16 @@ const RegisterScreen = () => {
             <Button
               gradientDuoTone="purpleToPink"
               type="submit"
-              isLoading={isLoading}
+              disabled={isLoading}
             >
-              Sign Up
+              {isLoading ? (
+                <>
+                  <Spinner size="sm" />
+                  <span className="pl-3">Loading...</span>
+                </>
+              ) : (
+                "Sign Up"
+              )}
             </Button>
           </form>
           <div className="flex gap-2 text-sm mt-5">

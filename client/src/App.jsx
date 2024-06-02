@@ -3,6 +3,7 @@ import Header from "./components/Header";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { Footer } from "flowbite-react";
 
 const App = () => {
   return (
@@ -10,6 +11,7 @@ const App = () => {
       <ToastContainer />
       <Header />
       <Outlet />
+      <Footer />
     </>
   );
 };
