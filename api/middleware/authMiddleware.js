@@ -2,15 +2,14 @@ import jwt from "jsonwebtoken";
 import asyncHandler from "./asyncHandler.js";
 import User from "../models/user.model.js";
 
-const protect = asyncHandler(async (req, res) => {
+const protect = asyncHandler(async (req, res, next) => {
   let token;
 
   token = req.cookies.access_token;
-
   if (token) {
     try {
       const decodedData = jwt.verify(token, process.env.JWT_SECRET);
-      req.user = await User.findById(decoded.userId).select("-password");
+      req.user = await User.findById(decodedData.userId).select("-password");
       next();
     } catch (error) {
       console.log(error);

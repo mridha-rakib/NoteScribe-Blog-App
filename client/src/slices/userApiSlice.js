@@ -1,4 +1,5 @@
 import { USER_AUTH_URL } from "../constant";
+import { USER_URL } from "../constant";
 import { apiSlice } from "./apiSlice";
 
 export const userApiSlice = apiSlice.injectEndpoints({
@@ -24,6 +25,14 @@ export const userApiSlice = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
+    updateUserProfile: builder.mutation({
+      query: (data) => ({
+        url: `${USER_URL}/update/${data.userId}`,
+        method: "PUT",
+        body: data,
+      }),
+      invalidatesTags: ["Users"],
+    }),
   }),
 });
 
@@ -31,4 +40,5 @@ export const {
   useRegisterMutation,
   useLoginMutation,
   useSignInWithGoogleMutation,
+  useUpdateUserProfileMutation,
 } = userApiSlice;
