@@ -33,4 +33,18 @@ const updateUserProfile = asyncHandler(async (req, res) => {
   res.status(200).json(rest);
 });
 
-export { updateUserProfile };
+const deleteUser = asyncHandler(async (req, res) => {
+  if (!req.user.isAdmin && req.user.id !== req.params.userId) {
+    res.status(403);
+    throw new Error("You are not allowed to delete this user");
+  }
+
+  await User.findByIdAndDelete(req.params.userId);
+  res.status(200).json("User has been deleted");
+});
+
+const signOut = asyncHandler(async (req, res) => {
+  res.clearCookie("access_token").status(200).json("User has been signed out");
+});
+
+export { updateUserProfile, deleteUser, signOut };

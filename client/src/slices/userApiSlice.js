@@ -33,6 +33,12 @@ export const userApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Users"],
     }),
+    logout: builder.mutation({
+      query: () => ({
+        url: `${USER_URL}/signout`,
+        method: "POST",
+      }),
+    }),
   }),
 });
 
@@ -41,4 +47,5 @@ export const {
   useLoginMutation,
   useSignInWithGoogleMutation,
   useUpdateUserProfileMutation,
+  useLogoutMutation,
 } = userApiSlice;

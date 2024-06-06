@@ -24,7 +24,7 @@ const router = createBrowserRouter(
     <Route path="/" element={<App />}>
       <Route index={true} path="/" element={<HomeScreen />} />
       <Route path="/about" element={<AboutScreen />} />
-      <Route path="/sing-in" element={<LoginScreen />} />
+      <Route path="/sign-in" element={<LoginScreen />} />
       <Route path="/sign-up" element={<RegisterScreen />} />
       <Route element={<PrivateRoute />}>
         <Route path="/dashboard" element={<DashboardScreen />} />
