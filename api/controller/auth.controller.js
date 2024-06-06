@@ -61,4 +61,35 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 });
 
-export { registerUser, authUser };
+const google = asyncHandler(async (req, res) => {
+  const { email, name, googlePhotoUrl } = req.body;
+
+  const user = await User.findOne({ email });
+
+  if (user) {
+    generateToken(res, user._id);
+    const { password, ...rest } = user._doc;
+    res.status(200).json(rest);
+  } else {
+    const generatedPassword =
+      Math.random().toString(36).slice(-8) +
+      Math.random().toString(36).slice(-8);
+
+    const newUser = User.create({
+      username:
+        name.toLowerCase().split(" ").join("") +
+        Math.random().toString(9).slice(-4),
+      email,
+      password: generatedPassword,
+      profilePicture: googlePhotoUrl,
+    });
+
+    generateToken(res, newUser._id);
+
+    const { password, ...rest } = newUser._doc;
+
+    res.status(200).json(rest);
+  }
+});
+
+export { registerUser, authUser, google };
