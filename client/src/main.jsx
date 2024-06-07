@@ -15,6 +15,8 @@ import LoginScreen from "./pages/LoginScreen.jsx";
 import AboutScreen from "./pages/AboutScreen.jsx";
 import ProjectsScreen from "./pages/ProjectsScreen.jsx";
 import DashboardScreen from "./pages/DashboardScreen.jsx";
+import CreatePostScreen from "./pages/CreatePostScreen.jsx";
+import OnlyAdminPrivateRoute from "./components/onlyAdminPrivateRoute.jsx";
 import { Provider } from "react-redux";
 import store from "./store.js";
 import PrivateRoute from "./components/PrivateRoute.jsx";
@@ -28,6 +30,9 @@ const router = createBrowserRouter(
       <Route path="/sign-up" element={<RegisterScreen />} />
       <Route element={<PrivateRoute />}>
         <Route path="/dashboard" element={<DashboardScreen />} />
+      </Route>
+      <Route element={<OnlyAdminPrivateRoute />}>
+        <Route path="create-post" element={<CreatePostScreen />} />
       </Route>
       <Route path="/projects" element={<ProjectsScreen />} />
     </Route>
