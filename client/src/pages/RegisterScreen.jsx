@@ -27,7 +27,7 @@ const RegisterScreen = () => {
     try {
       const res = await register({ ...formData }).unwrap();
       toast(res.message);
-      navigate("/sing-in");
+      navigate("/sign-in");
     } catch (err) {
       toast.error(err?.data?.message || err.error);
     }

@@ -34,7 +34,7 @@ const updateUserProfile = asyncHandler(async (req, res) => {
 });
 
 const deleteUser = asyncHandler(async (req, res) => {
-  if (!req.user.isAdmin && req.user.id !== req.params.userId) {
+  if (!req.user.isAdmin && req.user._id.toString() !== req.params.userId) {
     res.status(403);
     throw new Error("You are not allowed to delete this user");
   }

@@ -39,6 +39,13 @@ export const userApiSlice = apiSlice.injectEndpoints({
         method: "POST",
       }),
     }),
+    deleteUser: builder.mutation({
+      query: (data) => ({
+        url: `${USER_URL}/delete/${data.userId}`,
+        method: "DELETE",
+        body: data,
+      }),
+    }),
   }),
 });
 
@@ -48,4 +55,5 @@ export const {
   useSignInWithGoogleMutation,
   useUpdateUserProfileMutation,
   useLogoutMutation,
+  useDeleteUserMutation,
 } = userApiSlice;

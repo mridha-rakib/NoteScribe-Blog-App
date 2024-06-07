@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Alert, Button, TextInput, Spinner } from "flowbite-react";
+import { Alert, Button, TextInput, Spinner, Modal } from "flowbite-react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   getDownloadURL,
@@ -15,7 +15,9 @@ import { setCredentials, logout } from "../slices/authSlice";
 import {
   useUpdateUserProfileMutation,
   useLogoutMutation,
+  useDeleteUserMutation,
 } from "../slices/userApiSlice";
+import { HiOutlineExclamationCircle } from "react-icons/hi";
 import { toast } from "react-toastify";
 
 const DashProfile = () => {
@@ -23,6 +25,7 @@ const DashProfile = () => {
   const [imageFileUrl, setImageFileUrl] = useState(null);
   const [imageFileUploadProgress, setImageFileUploadProgress] = useState(null);
   const [imageFileUploadError, setImageFileUploadError] = useState(null);
+  const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState({});
   const [isFormChanged, setIsFormChanged] = useState(false);
   const filePickerRef = useRef();
@@ -129,6 +132,24 @@ const DashProfile = () => {
     }
   };
 
+  const [deleteUser, { isLoading: loadingDeleteUser }] =
+    useDeleteUserMutation();
+
+  const handleDeleteUser = async () => {
+    setShowModal(false);
+    try {
+      const res = await deleteUser({
+        userId: userInfo._id,
+        ...formData,
+      }).unwrap();
+      toast.success(res);
+      dispatch(logout());
+      navigate("/sign-in");
+    } catch (err) {
+      toast.error(err?.data?.message || err.error);
+    }
+  };
+
   const handleSignout = async () => {
     try {
       const res = await logoutApiCall().unwrap();
@@ -228,11 +249,37 @@ const DashProfile = () => {
         </Button>
       </form>
       <div className="text-red-500 flex justify-between mt-5">
-        <span className="cursor-pointer">Delete Account</span>
+        <span onClick={() => setShowModal(true)} className="cursor-pointer">
+          Delete Account
+        </span>
         <span className="cursor-pointer" onClick={handleSignout}>
           Sign Out
         </span>
       </div>
+      <Modal
+        show={showModal}
+        onClose={() => setShowModal(false)}
+        popup
+        size="md"
+      >
+        <Modal.Header />
+        <Modal.Body>
+          <div className="text-center">
+            <HiOutlineExclamationCircle className="h-14 w-14 text-gray-400 dark:text-gray-200 mb-4 mx-auto" />
+            <h3 className="mb-5 text-lg text-gray-500 dark:text-gray-400">
+              Are you sure you want to delete your account?
+            </h3>
+            <div className="flex justify-center gap-4">
+              <Button color="failure" onClick={handleDeleteUser}>
+                Yes, I'm sure
+              </Button>
+              <Button color="gray" onClick={() => setShowModal(false)}>
+                No, cancel
+              </Button>
+            </div>
+          </div>
+        </Modal.Body>
+      </Modal>
     </div>
   );
 };
