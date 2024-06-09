@@ -76,6 +76,7 @@ const DashProfile = () => {
         setImageFileUploadError(
           "Could not upload image (File must be less than 2MB)"
         );
+        toast.error(error?.data?.message || "Could not upload image ");
         setImageFileUploadProgress(null);
         setImageFile(null);
         setImageFileUrl(null);
@@ -261,10 +262,24 @@ const DashProfile = () => {
       </form>
       <div className="text-red-500 flex justify-between mt-5">
         <span onClick={() => setShowModal(true)} className="cursor-pointer">
-          Delete Account
+          {loadingDeleteUser ? (
+            <>
+              <Spinner size="sm" />
+              <span className="pl-3">Account Deleting...</span>
+            </>
+          ) : (
+            "Account Delete"
+          )}
         </span>
         <span className="cursor-pointer" onClick={handleSignout}>
-          Sign Out
+          {loadingSingout ? (
+            <>
+              <Spinner size="sm" />
+              <span className="pl-3">User profile Signout...</span>
+            </>
+          ) : (
+            "Sign Out"
+          )}
         </span>
       </div>
       <Modal

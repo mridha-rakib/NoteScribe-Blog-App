@@ -7,20 +7,18 @@ import {
   HiDocumentText,
 } from "react-icons/hi";
 import { Link, useLocation } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
-import { current } from "@reduxjs/toolkit";
+import { useSelector } from "react-redux";
 
 const DashSidebar = () => {
   const [tab, setTab] = useState("");
   const location = useLocation();
-  const dispatch = useDispatch();
 
   const { userInfo } = useSelector((state) => state.auth);
 
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search);
     const tabFromUrl = urlParams.get("tab");
-    console.log(tabFromUrl);
+
     if (tabFromUrl) {
       setTab(tabFromUrl);
     }
