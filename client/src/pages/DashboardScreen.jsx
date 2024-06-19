@@ -23,9 +23,9 @@ const DashboardScreen = () => {
         <DashSidebar />
       </div>
       {/* profile */}
-      {tab === "profile" && <DashProfile />}
+      {tab === "profile" && <DashProfile as="div" />}
       {/* Posts */}
-      {tab === "posts" && <DashPosts />}
+      {tab === "posts" && <DashPosts as="div" />}
     </div>
   );
 };
