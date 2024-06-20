@@ -3,25 +3,32 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Alert, Button, FileInput, Select, TextInput } from "flowbite-react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import { useSelector } from "react-redux";
 import {
   getDownloadURL,
   getStorage,
   ref,
   uploadBytesResumable,
 } from "firebase/storage";
+import { CircularProgressbar } from "react-circular-progressbar";
+import "react-circular-progressbar/dist/styles.css";
 import { app } from "../firebase";
 import {
   useFetchSinglePostQuery,
-  useShowMorePostsQuery,
-  useDeletePostsMutation,
+  useUpdatePostMutation,
 } from "../slices/postSlice";
-import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
 
 const UpdatePost = () => {
   const [file, setFile] = useState(null);
   const [imageUploadProgress, setImageUploadProgress] = useState(null);
   const [imageUploadError, setImageUploadError] = useState(null);
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState({
+    title: "",
+    category: "",
+    content: "",
+    image: "",
+  });
   const [publishError, setPublishError] = useState(null);
   const { postId } = useParams();
   const navigate = useNavigate();
@@ -31,7 +38,7 @@ const UpdatePost = () => {
   const {
     data: currentPost,
     error,
-    isLoading,
+    isLoading: currentPostLoading,
   } = useFetchSinglePostQuery(postId);
 
   useEffect(() => {
@@ -81,10 +88,29 @@ const UpdatePost = () => {
     }
   };
 
+  const [updatePost, { isLoading }] = useUpdatePostMutation();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await updatePost({
+        ...formData,
+        postId: formData._id,
+        userId: userInfo._id,
+      }).unwrap();
+      console.log();
+      toast.success(res.message);
+      navigate(`/post/${res._doc.slug}`);
+    } catch (error) {
+      console.log(error);
+      setPublishError("Something went wrong");
+    }
+  };
+
   return (
     <div className="p-3 max-w-3xl mx-auto min-h-screen">
-      <h1 className="text-center text-3xl font-semibold">Update Post</h1>
-      <form className="flex flex-col gap-4">
+      <h1 className="text-center text-3xl my-7 font-semibold">Update post</h1>
+      <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
         <div className="flex flex-col gap-4 sm:flex-row justify-between">
           <TextInput
             type="text"

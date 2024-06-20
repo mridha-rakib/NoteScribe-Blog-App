@@ -12,6 +12,13 @@ export const createPostApiSlice = apiSlice.injectEndpoints({
       keepUnusedDataFor: 5,
       providesTags: ["post.model"],
     }),
+    updatePost: builder.mutation({
+      query: (data) => ({
+        url: `${POST_URL}/updatepost/${data.postId}/${data.userId}`,
+        method: "PUT",
+        body: data,
+      }),
+    }),
     fetchPosts: builder.query({
       query: (userId) => ({
         url: `${POST_URL}/getposts?userId=${userId}`,
@@ -49,4 +56,5 @@ export const {
   useShowMorePostsQuery,
   useDeletePostsMutation,
   useFetchSinglePostQuery,
+  useUpdatePostMutation,
 } = createPostApiSlice;
