@@ -20,9 +20,19 @@ export const createPostApiSlice = apiSlice.injectEndpoints({
       }),
     }),
     fetchPosts: builder.query({
-      query: (userId) => ({
-        url: `${POST_URL}/getposts?userId=${userId}`,
-      }),
+      query: ({ userId, slug }) => {
+        let queryParams = [];
+        if (userId) queryParams.push(`userId=${userId}`);
+        if (slug) queryParams.push(`slug=${slug}`);
+
+        const queryString = queryParams.length
+          ? `?${queryParams.join("&")}`
+          : "";
+
+        return {
+          url: `${POST_URL}/getposts${queryString}`,
+        };
+      },
       keepUnusedDataFor: 5,
       providesTags: ["post.model"],
     }),
@@ -32,6 +42,11 @@ export const createPostApiSlice = apiSlice.injectEndpoints({
       }),
       keepUnusedDataFor: 5,
       providesTags: ["post.model"],
+    }),
+    fetchPostWithSlug: builder.query({
+      query: (postSlug) => ({
+        url: `${POST_URL}/getposts?slug=${postSlug}`,
+      }),
     }),
     showMorePosts: builder.query({
       query: (userId, startIndex) => ({
@@ -57,4 +72,5 @@ export const {
   useDeletePostsMutation,
   useFetchSinglePostQuery,
   useUpdatePostMutation,
+  useFetchPostWithSlugQuery,
 } = createPostApiSlice;
