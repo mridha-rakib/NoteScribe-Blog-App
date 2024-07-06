@@ -5,13 +5,18 @@ import {
   HiArrowSmRight,
   HiChartPie,
   HiDocumentText,
+  HiOutlineUserGroup,
 } from "react-icons/hi";
 import { Link, useLocation } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { useLogoutMutation } from "../slices/userApiSlice";
+import { logout } from "../slices/authSlice";
+import { toast } from "react-toastify";
 
 const DashSidebar = () => {
   const [tab, setTab] = useState("");
   const location = useLocation();
+  const dispatch = useDispatch();
 
   const { userInfo } = useSelector((state) => state.auth);
 
@@ -23,6 +28,19 @@ const DashSidebar = () => {
       setTab(tabFromUrl);
     }
   }, [location.search]);
+
+  const [logoutApiCall, { isLoading: logoutLoading }] = useLogoutMutation();
+
+  const handleSignout = async () => {
+    try {
+      const res = await logoutApiCall().unwrap();
+      dispatch(logout());
+      toast.success(res);
+      navigate("/sign-in");
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   return (
     <Sidebar className="w-full md:w-56">
@@ -61,7 +79,24 @@ const DashSidebar = () => {
               </Sidebar.Item>
             </Link>
           )}
-          <Sidebar.Item icon={HiArrowSmRight} className="cursor-pointer">
+          {userInfo.isAdmin && (
+            <>
+              <Link to="/dashboard?tab=users">
+                <Sidebar.Item
+                  active={tab === "users"}
+                  icon={HiOutlineUserGroup}
+                  as="div"
+                >
+                  User
+                </Sidebar.Item>
+              </Link>
+            </>
+          )}
+          <Sidebar.Item
+            icon={HiArrowSmRight}
+            className="cursor-pointer"
+            onClick={handleSignout}
+          >
             Sign Out
           </Sidebar.Item>
         </Sidebar.ItemGroup>

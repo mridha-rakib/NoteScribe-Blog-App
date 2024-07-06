@@ -47,4 +47,34 @@ const signOut = asyncHandler(async (req, res) => {
   res.clearCookie("access_token").status(200).json("User has been signed out");
 });
 
-export { updateUserProfile, deleteUser, signOut };
+const getUsers = asyncHandler(async (req, res) => {
+  if (!req.user.isAdmin) {
+    return next(errorHandler(403, "You are not allowed to see all users"));
+  }
+
+  const { startIndex = 0, limit = 9, sort = "asc" } = req.query;
+  const sortDirection = sort === "asc" ? 1 : -1;
+
+  const [users, totalUsers] = await Promise.all([
+    User.find()
+      .sort({ createdAt: sortDirection })
+      .skip(startIndex)
+      .limit(limit)
+      .select("-password"),
+    User.countDocuments(),
+  ]);
+
+  const oneMonthAgo = new Date(new Date().setMonth(new Date().getMonth() - 1));
+  const lastMonthUsers = await User.countDocuments({
+    createdAt: { $gte: oneMonthAgo },
+  });
+
+  // Respond with data
+  res.status(200).json({
+    users,
+    totalUsers,
+    lastMonthUsers,
+  });
+});
+
+export { updateUserProfile, deleteUser, signOut, getUsers };

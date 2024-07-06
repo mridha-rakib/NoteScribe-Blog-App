@@ -1,18 +1,33 @@
 import { Avatar, Button, Dropdown, Navbar, TextInput } from "flowbite-react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { AiOutlineSearch } from "react-icons/ai";
 import { FaMoon, FaSun } from "react-icons/fa";
 import { toggleTheme } from "../slices/themeSlice";
+import { useLogoutMutation } from "../slices/userApiSlice";
+import { logout } from "../slices/authSlice";
+import { toast } from "react-toastify";
 
 const Header = () => {
   const path = useLocation().pathname;
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const { userInfo } = useSelector((state) => state.auth);
   const { theme } = useSelector((state) => state.theme);
 
-  const handleSignout = () => {};
+  const [logoutApiCall, { isLoading: logoutLoading }] = useLogoutMutation();
+
+  const handleSignout = async () => {
+    try {
+      const res = await logoutApiCall().unwrap();
+      dispatch(logout());
+      toast.success(res);
+      navigate("/sign-in");
+    } catch (err) {
+      console.error(err);
+    }
+  };
   return (
     <Navbar className="border-b-2 ">
       <Link

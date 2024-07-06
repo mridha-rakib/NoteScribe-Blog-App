@@ -46,6 +46,18 @@ export const userApiSlice = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
+    getUsers: builder.query({
+      query: () => ({
+        url: `${USER_URL}/getusers`,
+      }),
+    }),
+    showMoreUsers: builder.query({
+      query: (startIndex) => ({
+        url: `${USER_URL}/getusers?startIndex=${startIndex}`,
+      }),
+      keepUnusedDataFor: 5,
+      providesTags: ["user.model"],
+    }),
   }),
 });
 
@@ -56,4 +68,6 @@ export const {
   useUpdateUserProfileMutation,
   useLogoutMutation,
   useDeleteUserMutation,
+  useGetUsersQuery,
+  useShowMoreUsersQuery,
 } = userApiSlice;
