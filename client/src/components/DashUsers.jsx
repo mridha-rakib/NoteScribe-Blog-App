@@ -33,17 +33,6 @@ const DashUsers = () => {
     error: showMoreUsersError,
     isLoading: showMoreUsersLoading,
   } = useShowMoreUsersQuery(users.length);
-  console.log(showMoreUsers);
-
-  // {
-
-  //   if (showMoreBlogPosts && Array.isArray(showMoreBlogPosts.posts)) {
-  //     setUserPosts((prev) => [...prev, ...showMoreBlogPosts.posts]);
-  //     if (showMoreBlogPosts.posts.length < 9) {
-  //       setShowMore(false);
-  //     }
-  //   }
-  // }
 
   const handleShowMore = async () => {
     if (showMoreUsers && Array.isArray(showMoreUsers.users)) {

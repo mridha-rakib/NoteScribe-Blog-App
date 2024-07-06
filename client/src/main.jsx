@@ -21,6 +21,7 @@ import UpdatePost from "./pages/UpdatePostScreen.jsx";
 import { Provider } from "react-redux";
 import store from "./store.js";
 import PrivateRoute from "./components/PrivateRoute.jsx";
+import PostScreen from "./pages/PostScreen.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -37,6 +38,7 @@ const router = createBrowserRouter(
         <Route path="/update-post/:postId" element={<UpdatePost />} />
       </Route>
       <Route path="/projects" element={<ProjectsScreen />} />
+      <Route path="/post/:postSlug" element={<PostScreen />} />
     </Route>
   )
 );

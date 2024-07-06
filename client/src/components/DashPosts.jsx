@@ -20,7 +20,9 @@ const DashPosts = () => {
 
   const { userInfo } = useSelector((state) => state.auth);
   const [deletePosts, { isLoading: loadingDelete }] = useDeletePostsMutation();
-  const { data, error, isLoading } = useFetchPostsQuery(userInfo._id);
+  const { data, error, isLoading } = useFetchPostsQuery({
+    userId: userInfo._id,
+  });
 
   useEffect(() => {
     if (data && Array.isArray(data.posts)) {
